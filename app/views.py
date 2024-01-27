@@ -85,3 +85,34 @@ def sign_up():
 
     return render_template("public/sign_up.html")
 
+users = {
+    "joao": {
+        "name" : "João Victor",
+        "bio" : "Dev Python",
+        "twitter_handle":"@jefferson123"
+    },
+    "cesar": {
+        "name" : "Cesar Evaristo",
+        "bio" : "Dev Java",
+        "twitter_handle":"@cesinha"
+    },
+    "heverton": {
+        "name" : "Henrique Everton",
+        "bio" : "Suporte",
+        "twitter_handle":"@heverton"
+    }
+}
+
+@app.route("/profile/<username>")
+def profile(username):
+
+    user = None
+
+    if username in users:
+        user = users[username]
+
+    return render_template("public/profile.html", username=username, user=user)
+
+@app.route("/multiple/<foo>/<bar>/<baz>")
+def multi(foo, bar, baz):
+    return f"Foo is {foo}, bar is {bar} and baz is {baz}"
