@@ -15,7 +15,5 @@ elif app.config["ENV"] == "testing":
 else:
     app.config.from_object("config.DevelopmentConfig")
 
-print(app.config["ENV"])
-
 from app import views
 from app import admin_views

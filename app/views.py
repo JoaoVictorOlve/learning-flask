@@ -168,3 +168,22 @@ def query():
 
     else:
         return "No query received", 200
+    
+@app.route("/upload-image", methods=["GET", "POST"])
+def upload_image():
+
+    if request.method == "POST":
+
+        print("Post")
+
+        if request.files:
+
+            image = request.files["image"]
+
+            print("post image")
+            
+            print(image)
+
+            return redirect(request.url)
+
+    return render_template("public/upload_image.html")
