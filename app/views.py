@@ -1,7 +1,7 @@
 import os
 from app import app
 
-from flask import render_template, request, redirect, jsonify, make_response
+from flask import render_template, request, redirect, jsonify, make_response, send_from_directory, abort
 
 from datetime import datetime
 
@@ -226,3 +226,4 @@ def upload_image():
             return redirect(request.url)
 
     return render_template("public/upload_image.html")
+
