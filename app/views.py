@@ -1,8 +1,11 @@
+import os
 from app import app
 
 from flask import render_template, request, redirect, jsonify, make_response
 
 from datetime import datetime
+
+from werkzeug.utils import secure_filename
 
 @app.template_filter("clean_date")
 def clean_date(dt):
@@ -169,20 +172,56 @@ def query():
     else:
         return "No query received", 200
     
+app.config["IMAGE_UPLOADS"] = r"C:\Users\Computador\Documents\learning-flask\app\static\img\uploads"
+app.config["ALLOWED_IMAGE_EXTENSION"] = ["PNG", "JPG", "JPEG", "GIF"]
+app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
+
+def allowed_image(filename):
+
+    if not "." in filename:
+        return False
+    
+    ext = filename.rsplit(".", 1)[1]
+
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSION"]:
+        return True
+    else:
+        return False
+    
+def allowed_image_filesize(filesize):
+
+    if int(filesize) <= app.config["MAX_IMAGE_FILESIZE"]:
+        return True
+    else:
+        return False
+
 @app.route("/upload-image", methods=["GET", "POST"])
 def upload_image():
 
     if request.method == "POST":
 
-        print("Post")
-
         if request.files:
+
+            if not allowed_image_filesize(request.cookies.get("filesize")):
+                print("file exceeded maximum size")
+                return redirect(request)
 
             image = request.files["image"]
 
-            print("post image")
+            if image.filename == "":
+                print("Image must have name")
+                return redirect(request.url)
             
-            print(image)
+            if not allowed_image(image.filename):
+                print("That image extension is not allowed")
+                return redirect(request.url)
+            
+            else:
+                filename = secure_filename(image.filename)
+
+                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
+            
+            print("Image saved")
 
             return redirect(request.url)
 
