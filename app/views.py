@@ -1,7 +1,7 @@
 import os
 from app import app
 
-from flask import render_template, request, redirect, jsonify, make_response, send_from_directory, abort, request, make_response
+from flask import render_template, request, redirect, jsonify, make_response, send_from_directory, abort, request, make_response, session, url_for
 
 from datetime import datetime
 
@@ -93,31 +93,34 @@ def sign_up():
 
 users = {
     "joao": {
-        "name" : "João Victor",
+        "username" : "João Victor",
         "bio" : "Dev Python",
+        "password": "123",
         "twitter_handle":"@jefferson123"
     },
     "cesar": {
-        "name" : "Cesar Evaristo",
+        "username" : "Cesar Evaristo",
         "bio" : "Dev Java",
+        "password": "123",
         "twitter_handle":"@cesinha"
     },
     "heverton": {
-        "name" : "Henrique Everton",
+        "username" : "Henrique Everton",
         "bio" : "Suporte",
+        "password": "123",
         "twitter_handle":"@heverton"
     }
 }
 
-@app.route("/profile/<username>")
-def profile(username):
+# @app.route("/profile/<username>")
+# def profile(username):
 
-    user = None
+#     user = None
 
-    if username in users:
-        user = users[username]
+#     if username in users:
+#         user = users[username]
 
-    return render_template("public/profile.html", username=username, user=user)
+#     return render_template("public/profile.html", username=username, user=user)
 
 @app.route("/multiple/<foo>/<bar>/<baz>")
 def multi(foo, bar, baz):
@@ -286,3 +289,45 @@ def cookies():
     res.set_cookie("chewy", "yes")
 
     return res
+
+app.config["SECRET_KEY"] = "IUTeyRP4dqWMx6C925Zthg"
+
+@app.route("/sign-in", methods=["GET", "POST"])
+def sign_in():
+
+    if request.method == "POST":
+
+        req = request.form
+
+        username = req.get("username")
+        password = req.get("password")
+
+        if not username in users:
+            print("username not found")
+            return redirect(request.url)
+        else:
+            user = users[username]
+        
+        if not password == user["password"]:
+            print("Password is wrong!")
+            return redirect(request.url)
+        
+        else:
+            session["USERNAME"] = user["username"]
+            print("User added to session")
+            # return redirect(url_for("profile"))
+
+    return render_template("public/sign_in.html")
+
+@app.route("/profile/<username>")
+def profile(username):
+
+    user = None
+
+    if username in users:
+        user = users[username]
+
+    return render_template("public/profile.html", username=username, user=user)
+
+#session=eyJVU0VSTkFNRSI6IkpvXHUwMGUzbyBWaWN0b3IifQ.ZbvwTg.6_s2-ywoiA92cTmhUb-NP71NQck; Secure; HttpOnly; Path=/
+
