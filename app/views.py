@@ -1,7 +1,7 @@
 import os
 from app import app
 
-from flask import render_template, request, redirect, jsonify, make_response, send_from_directory, abort
+from flask import render_template, request, redirect, jsonify, make_response, send_from_directory, abort, request, make_response
 
 from datetime import datetime
 
@@ -253,3 +253,36 @@ def get_report(path):
 
     except FileNotFoundError:
         abort(404)
+
+@app.route("/cookies")
+def cookies():
+
+    res = make_response("Cookies", 200)
+
+    cookies = request.cookies
+
+    flavor = cookies.get("flavor")
+    choc_type = cookies.get("chocolate type")
+    chewy = cookies.get("chewy")
+    brand = cookies.get("brand")
+
+    print(flavor, choc_type, chewy, brand)
+
+    print(flavor)
+
+    res.set_cookie(
+        "flavor",
+        value="chocolate chip",
+        max_age=10,
+        expires=None,
+        path=request.path,
+        domain=None,
+        secure=False,
+        httponly=False,
+        samesite=None
+        )
+    
+    res.set_cookie("chocolate type", "dark")
+    res.set_cookie("chewy", "yes")
+
+    return res
