@@ -227,3 +227,29 @@ def upload_image():
 
     return render_template("public/upload_image.html")
 
+@app.route("/get-image/<string:image_name>")
+def get_image(image_name):
+
+    try:
+        return send_from_directory(directory=app.config["CLIENT_IMAGES"], path=image_name, as_attachment=False)
+
+    except FileNotFoundError:
+        abort(404)
+
+@app.route("/get-csv/<string:file_name>")
+def get_csv(file_name):
+
+    try:
+        return send_from_directory(directory=app.config["CLIENT_CSV"], path=file_name, as_attachment=True)
+
+    except FileNotFoundError:
+        abort(404)
+
+@app.route("/get-reports/<path:path>")
+def get_report(path):
+
+    try:
+        return send_from_directory(directory=app.config["CLIENT_REPORTS"], path=path, as_attachment=True)
+
+    except FileNotFoundError:
+        abort(404)

@@ -8,6 +8,10 @@ class Config(object):
     DB_USERNAME = "root"
     DB_PASSWORD = "example"
 
+    CLIENT_IMAGES = r"C:\Users\Computador\Documents\learning-flask\app\static\client\img"
+    CLIENT_CSV = r"C:\Users\Computador\Documents\learning-flask\app\static\client\csv"
+    CLIENT_REPORTS = r"C:\Users\Computador\Documents\learning-flask\app\static\client\reports"
+
     UPLOADS = "/home/username/app/app/static/images/uploads"
     SESSION_COOKIE_SECURE = True
 
