@@ -93,19 +93,19 @@ def sign_up():
 
 users = {
     "joao": {
-        "username" : "João Victor",
+        "username" : "joao",
         "bio" : "Dev Python",
         "password": "123",
         "twitter_handle":"@jefferson123"
     },
     "cesar": {
-        "username" : "Cesar Evaristo",
+        "username" : "cesar",
         "bio" : "Dev Java",
         "password": "123",
         "twitter_handle":"@cesinha"
     },
     "heverton": {
-        "username" : "Henrique Everton",
+        "username" : "heverton",
         "bio" : "Suporte",
         "password": "123",
         "twitter_handle":"@heverton"
@@ -314,20 +314,25 @@ def sign_in():
         
         else:
             session["USERNAME"] = user["username"]
+            session["PASSWORD"] = user["password"]
             print("User added to session")
-            # return redirect(url_for("profile"))
+            return redirect(url_for("profile"))
 
     return render_template("public/sign_in.html")
 
-@app.route("/profile/<username>")
-def profile(username):
+@app.route("/profile")
+def profile():
 
-    user = None
-
-    if username in users:
+    if session.get("USERNAME", None) is not None:
+        username = session.get("USERNAME")
         user = users[username]
-
-    return render_template("public/profile.html", username=username, user=user)
-
-#session=eyJVU0VSTkFNRSI6IkpvXHUwMGUzbyBWaWN0b3IifQ.ZbvwTg.6_s2-ywoiA92cTmhUb-NP71NQck; Secure; HttpOnly; Path=/
-
+        return render_template("public/profile.html", user=user)
+    else:
+        print("Username not found in session")
+        return redirect(url_for('sign_in'))
+    
+@app.route("/sign-out")
+def sign_out():
+    session.pop('USERNAME', None)
+    session.pop('PASSWORD', None)
+    return redirect(url_for('sign_in'))
