@@ -15,6 +15,7 @@ def clean_date(dt):
 def index():
 
     print(app.config["DB_NAME"])
+    # abort(403)
 
     return render_template("public/index.html")
 
